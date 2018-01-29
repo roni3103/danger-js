@@ -13,6 +13,7 @@ import inline from "../runner/runners/inline"
 import { dangerfilePath } from "./utils/file-utils"
 import { DangerDSLJSONType } from "../dsl/DangerDSL"
 import { jsonToDSL } from "../runner/jsonToDSL"
+import { getContext } from "./get-context";
 
 const d = debug("danger:runner")
 
@@ -27,7 +28,7 @@ const d = debug("danger:runner")
 program
   .usage("[options]")
   .description(
-    "Handles running the Dangerfile, expects a DSL from STDIN, which should be passed from `danger` or danger run`. You probably don't need to use this command."
+  "Handles running the Dangerfile, expects a DSL from STDIN, which should be passed from `danger` or danger run`. You probably don't need to use this command."
   )
   // Because other calls will trigger this one,
   // and we don't want to keep a white/blacklist
@@ -43,12 +44,9 @@ let runtimeEnv = {} as any
 const run = async (jsonString: string) => {
   d("Got STDIN for Danger Run")
   foundDSL = true
-  const dslJSON = JSON.parse(jsonString) as { danger: DangerDSLJSONType }
-  const dsl = await jsonToDSL(dslJSON.danger)
   const dangerFile = dangerfilePath(program)
-
   // Set up the runtime env
-  const context = contextForDanger(dsl)
+  const context = await getContext(jsonString, program);
   runtimeEnv = await inline.createDangerfileRuntimeEnvironment(context)
   d(`Evaluating ${dangerFile}`)
   await inline.runDangerfileEnvironment(dangerFile, undefined, runtimeEnv)
