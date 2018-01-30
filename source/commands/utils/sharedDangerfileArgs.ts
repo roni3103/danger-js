@@ -1,10 +1,11 @@
 import * as program from "commander"
 import chalk from "chalk"
 
-process.on("unhandledRejection", function (reason: string, _p: any) {
-  console.log(chalk.red("Error: "), reason)
-  process.exitCode = 1
-})
+process.on("unhandledRejection",
+  function (reason: string, _p: any) {
+    console.log(chalk.magentaBright("Error: "), reason)
+    process.exitCode = 1
+  })
 
 export interface SharedCLI extends program.CommanderStatic {
   verbose: boolean
@@ -13,6 +14,7 @@ export interface SharedCLI extends program.CommanderStatic {
   dangerfile: string
   id: string
   repl: string
+
 }
 
 export default (command: any) =>

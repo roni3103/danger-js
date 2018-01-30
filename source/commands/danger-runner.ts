@@ -8,11 +8,9 @@ import * as debug from "debug"
 import * as getSTDIN from "get-stdin"
 import chalk from "chalk"
 
-import { contextForDanger } from "../runner/Dangerfile"
 import inline from "../runner/runners/inline"
 import { dangerfilePath } from "./utils/file-utils"
-import { DangerDSLJSONType } from "../dsl/DangerDSL"
-import { jsonToDSL } from "../runner/jsonToDSL"
+
 import { getContext } from "./get-context";
 
 const d = debug("danger:runner")

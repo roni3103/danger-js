@@ -3,17 +3,14 @@ import { getContext } from '../get-context';
 import { DangerContext } from "../../runner/Dangerfile";
 
 jest.mock("../../runner/jsonToDSL")
-
 const foo = require("../../runner/jsonToDSL");
-
 // foo is a mock function
 foo.jsonToDSL = jest.fn(() => Promise.resolve({ danger: '' }));
 
 jest.mock("../../runner/Dangerfile");
-
 const bar = require("../../runner/Dangerfile");
 
-// foo is a mock function
+// bar is a mock function
 bar.contextForDanger = jest.fn(() => Promise.resolve({ danger: '' }));
 
 describe('commands/get-context', () => {
@@ -35,7 +32,13 @@ describe('commands/get-context', () => {
         })
 
         program = {
-            base: 'develop'
+            base: 'develop',
+            verbose: true,
+            externalCiProvider: 'aprovider',
+            textOnly: false,
+            dangerfile: 'afile',
+            id: '123'
+
         }
 
     })
@@ -55,6 +58,8 @@ describe('commands/get-context', () => {
         expect(context.danger).toEqual('')
     });
 
+
+
     it('should call jsonToDSL with danger object', () => {
         expect(foo.jsonToDSL).toHaveBeenCalledWith({
             settings: {
@@ -62,7 +67,14 @@ describe('commands/get-context', () => {
                     baseURL: ''
                 },
                 cliArgs: {
-                    base: 'develop'
+                    base: 'develop',
+                    verbose: true,
+                    externalCiProvider: 'aprovider',
+                    textOnly: false,
+                    dangerfile: 'afile',
+                    id: '123'
+
+
                 }
             }
         })
@@ -71,4 +83,5 @@ describe('commands/get-context', () => {
     it('should call context for danger with dsl', () => {
         expect(bar.contextForDanger).toHaveBeenCalledWith({ danger: '' });
     })
+
 })
